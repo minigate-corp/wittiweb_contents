@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity Web Player | Universe</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+  </head>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=1920 height=1200 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-logo-title-footer"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">Universe</div>
+      </div>
+    </div>
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+
+      // Shows a temporary message banner/ribbon for a few seconds, or
+      // a permanent error message on top of the canvas if type=='error'.
+      // If type=='warning', a yellow highlight color is used.
+      // Modify or remove this function to customize the visually presented
+      // way that non-critical warnings and error messages are presented to the
+      // user.
+      function unityShowBanner(msg, type) {
+        var warningBanner = document.querySelector("#unity-warning");
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/build_universeWeb.loader.js";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/build_universeWeb.data.unityweb",
+        frameworkUrl: buildUrl + "/build_universeWeb.framework.js.unityweb",
+        codeUrl: buildUrl + "/build_universeWeb.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "minigate",
+        productName: "Universe",
+        productVersion: "0.1.1",
+        showBanner: unityShowBanner,
+        // Application.persistentDataPath(/idbfs/<hash>) 로의 쓰기를 IndexedDB 에
+        // 자동으로 동기화한다. 이 값이 없으면 Unity 가 deprecated 된 수동 동기화
+        // (JS_FileSystem_Sync) 로 동작한다. 캡처 이미지 저장/삭제 유지에 필요.
+        autoSyncPersistentDataPath: true,
+      };
+
+      // By default, Unity keeps WebGL canvas render target size matched with
+      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+      // Set this to false if you want to decouple this synchronization from
+      // happening inside the engine, and you would instead like to size up
+      // the canvas DOM size and WebGL render target sizes yourself.
+      // config.matchWebGLToCanvasSize = false;
+
+      // ── 전자칠판/고해상도 호환: 렌더 해상도(백버퍼) 제한으로 "검은 화면"과 "프레임 저하"를 동시에 방지.
+      //    핵심: FPS는 물리 화면 크기가 아니라 백버퍼 픽셀 수(= CSS크기 x devicePixelRatio)에 비례한다.
+      //    4K 전자칠판에서 화면을 채우면 백버퍼가 데스크톱(1920x1200) 대비 4배 이상 커져 프레임이 떨어지고,
+      //    1920 x DPR 이 GPU의 MAX_TEXTURE_SIZE(4096)를 넘으면 컨텍스트 실패로 검은 화면까지 발생한다.
+      //    -> 화면은 CSS로 꽉 채우되(브라우저가 업스케일, GPU 부하 없음), 실제 렌더 폭만 TARGET_W로 고정한다.
+      //       이렇게 하면 물리 해상도와 무관하게 데스크톱 수준의 프레임이 유지된다. (대가: 약간의 업스케일 blur)
+      config.devicePixelRatio = (function () {
+        var TARGET_W = 1920;   // 목표 렌더 가로 해상도. 더 선명하게 원하면 2560 등으로 올릴 것(프레임과 트레이드오프)
+        var MAX_DIM  = 4096;   // GPU MAX_TEXTURE_SIZE 안전 상한(검은 화면 방지)
+        var dpr = window.devicePixelRatio || 1;
+        var cssW = window.innerWidth || TARGET_W;   // 캔버스가 채우는 CSS 가로 폭(모바일 채움 모드 기준)
+        // 백버퍼 가로(cssW x dpr)가 TARGET_W를 넘지 않도록 DPR 상한을 건다.
+        var cap = Math.min(TARGET_W, MAX_DIM) / cssW;
+        return Math.max(0.1, Math.min(dpr, cap));   // 네이티브 DPR 이상으로는 올리지 않음(업스케일만)
+      })();
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.querySelector("#unity-container").className = "unity-mobile";
+        canvas.className = "unity-mobile";
+
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
+
+
+      } else {
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+        canvas.style.width = "1920px";
+        canvas.style.height = "1200px";
+      }
+
+      document.querySelector("#unity-loading-bar").style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          window.unityInstance = unityInstance;   // ★ 전역 노출 (테스트 버튼용)
+          document.querySelector("#unity-loading-bar").style.display = "none";
+
+          // ★ 브라우저 창을 꽉 채우되, 게임 원본 종횡비(WIDTH:HEIGHT)를 유지한다.
+          //    -> 100vw x 100vh로 늘리면 화면 비율이 다른 기기(전자칠판 등)에서 세로가 넘쳐
+          //       하단 UI가 잘린다. 대신 비율을 지킨 채 화면 안에 '맞춤(letterbox)'하고,
+          //       남는 부분은 테마 배경색 여백으로 둔다. -> 어떤 화면에서도 잘리지 않는다.
+          var container = document.querySelector("#unity-container");
+          var footer = document.querySelector("#unity-footer");
+          var ASPECT = 1920 / 1200;   // 예) 1920/1200 = 1.6
+
+          // 컨테이너는 뷰포트 전체를 덮고, 그 안에서 캔버스를 비율 맞춰 중앙 배치.
+          container.style.position = "fixed";
+          container.style.left = "0";
+          container.style.top = "0";
+          container.style.transform = "none";   // ★ CSS의 translate(-50%,-50%) 무력화
+          container.style.width = "100vw";
+          container.style.height = "100vh";
+          container.style.display = "flex";
+          container.style.alignItems = "center";
+          container.style.justifyContent = "center";
+          container.style.zIndex = "1000";
+          if (footer) footer.style.display = "none";
+          document.body.style.overflow = "hidden";
+
+          // 뷰포트 크기에 맞춰 종횡비를 유지한 최대 크기로 캔버스를 맞춘다.
+          function fitCanvas() {
+            // ★ 전자칠판/모바일 크롬에서 window.innerHeight 는 주소창·하단바 뒤 영역까지
+            //    포함해 '실제 보이는 높이'보다 크게 잡히는 경우가 있다. 그러면 캔버스 하단이
+            //    브라우저 UI 뒤로 숨어 잘린다. -> 실제 보이는 영역(visualViewport)을 우선 사용.
+            var vv = window.visualViewport;
+            var winW = (vv && vv.width)  ? vv.width  : (document.documentElement.clientWidth  || window.innerWidth);
+            var winH = (vv && vv.height) ? vv.height : (document.documentElement.clientHeight || window.innerHeight);
+            // 컨테이너도 '실제 보이는 영역'에 정확히 맞춘다.
+            //  -> 100vh 로 두면 보이는 높이보다 커져서, 중앙정렬된 캔버스가 아래로 밀려 잘린다.
+            container.style.width = winW + "px";
+            container.style.height = winH + "px";
+            var w, h;
+            if (winW / winH > ASPECT) {
+              // 창이 게임보다 넓음 -> 높이에 맞추고 좌우 여백
+              h = winH;
+              w = Math.round(winH * ASPECT);
+            } else {
+              // 창이 게임보다 좁음/높음 -> 너비에 맞추고 상하 여백
+              w = winW;
+              h = Math.round(winW / ASPECT);
+            }
+            canvas.style.width = w + "px";
+            canvas.style.height = h + "px";
+          }
+          fitCanvas();
+          window.addEventListener("resize", fitCanvas);
+          if (window.visualViewport) {
+            window.visualViewport.addEventListener("resize", fitCanvas);
+            window.visualViewport.addEventListener("scroll", fitCanvas);
+          }
+          // 초기 로드 직후 브라우저 UI(주소창 등)가 자리를 잡느라 크기가 늦게 확정되는
+          // 기기 대응: 잠시 뒤 한 번 더 맞춘다.
+          setTimeout(fitCanvas, 300);
+          setTimeout(fitCanvas, 1000);
+
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+
+      document.body.appendChild(script);
+
+    </script>
+
+    <!-- ===== [테스트용] 프론트→유니티 SendMessage 버튼 (배포 전 제거하려면 이 블록 삭제) ===== -->
+    <!-- <div id="test-bridge-panel" style="position:fixed; top:100px; left:10px; z-index:2147483647; display:flex; flex-direction:column; gap:6px;">
+      <button class="test-scene-btn" data-scene="_ZodiacCard_Collection"
+              style="padding:12px 20px; font-size:15px; cursor:pointer;">
+        별자리 컬렉션 이동
+      </button>
+    </div>
+    <script>
+      (function () {
+        function loadScene(sceneName) {
+          if (!window.unityInstance) {
+            alert("Unity 아직 로딩 중입니다. 잠시 후 다시 눌러주세요.");
+            return;
+          }
+          // 첫 인자 "SceneLoadManager" 는 씬 하이어라키의 GameObject 이름 (클래스명 아님)
+          window.unityInstance.SendMessage("SceneLoadManager", "UnitySceneLoad", sceneName);
+          console.log("[TestBridge] SendMessage -> SceneLoadManager.UnitySceneLoad(" + sceneName + ")");
+        }
+        document.querySelectorAll(".test-scene-btn").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            loadScene(btn.getAttribute("data-scene"));
+          });
+        });
+      })();
+    </script> -->
+    <!-- ===== [테스트용] 끝 ===== -->
+
+  </body>
+</html>
