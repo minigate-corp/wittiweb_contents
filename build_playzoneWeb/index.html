@@ -67,7 +67,24 @@
         // 자동으로 동기화한다. 이 값이 없으면 Unity 가 deprecated 된 수동 동기화
         // (JS_FileSystem_Sync) 로 동작한다. 캡처 이미지 저장/삭제 유지에 필요.
         autoSyncPersistentDataPath: true,
+        // ── 캐시 규칙: 로더와 UnityWebRequest(Addressables 번들 포함)의 요청마다 호출되어,
+        //    브라우저 IndexedDB(UnityCache)에 저장할지/저장본을 어떻게 쓸지 정한다.
+        //    정의하지 않으면 Unity 기본값(.data/.bundle 은 매 실행마다 서버에 변경 여부 확인)으로 동작한다.
+        cacheControl: unityCacheControl,
       };
+
+      // immutable      : 한 번 받으면 서버에 묻지 않고 저장본을 바로 사용(오프라인에서도 동작)
+      // must-revalidate: 저장하되 매번 서버에 변경 여부를 확인(안 바뀌면 304 로 본문을 다시 받지 않음)
+      // no-store       : 저장하지 않음
+      function unityCacheControl(url) {
+        var path = url.split("?")[0];
+        // Addressables "Append Hash" 번들(이름_32자리해시.bundle): 내용이 바뀌면 파일명이 바뀌므로 영구 저장해도 안전하다.
+        if (/_[0-9a-f]{32}\.bundle$/i.test(path)) return "immutable";
+        // 해시 없는 번들(Localization 그룹 등)과 빌드 데이터(.data): 이름이 그대로라 매번 변경 여부를 확인해야 한다.
+        if (/\.bundle$/i.test(path) || /\.data(\.unityweb|\.br|\.gz)?$/i.test(path)) return "must-revalidate";
+        // 카탈로그(.json/.hash), API 응답 등: 항상 최신이어야 하므로 저장하지 않는다.
+        return "no-store";
+      }
 
       // By default, Unity keeps WebGL canvas render target size matched with
       // the DOM size of the canvas element (scaled by window.devicePixelRatio)
