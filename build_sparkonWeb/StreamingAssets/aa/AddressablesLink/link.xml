@@ -18,7 +18,6 @@
     <type fullname="StringSignalReceiver" preserve="all" />
     <type fullname="SuperScrollView.LoopListView2" preserve="all" />
     <type fullname="TouchEffectControl" preserve="all" />
-    <type fullname="Tutorial_NPC" preserve="all" />
     <type fullname="UIWorldDragDropItem" preserve="all" />
     <type fullname="WorkBook_EnglishKeyword" preserve="all" />
     <type fullname="WorkBook_KeywordData" preserve="all" />
@@ -198,14 +197,14 @@
     <type fullname="TMPro.TMP_ColorGradient" preserve="all" />
     <type fullname="TMPro.TMP_FontAsset" preserve="all" />
     <type fullname="TMPro.TMP_SpriteAsset" preserve="all" />
+    <type fullname="TMPro.TMP_SpriteCharacter" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.TMP_SpriteGlyph" preserve="nothing" serialized="true" />
     <type fullname="TMPro.FaceInfo_Legacy" preserve="nothing" serialized="true" />
     <type fullname="TMPro.FontAssetCreationSettings" preserve="nothing" serialized="true" />
     <type fullname="TMPro.KerningTable" preserve="nothing" serialized="true" />
     <type fullname="TMPro.TMP_Character" preserve="nothing" serialized="true" />
     <type fullname="TMPro.TMP_FontFeatureTable" preserve="nothing" serialized="true" />
     <type fullname="TMPro.TMP_FontWeightPair" preserve="nothing" serialized="true" />
-    <type fullname="TMPro.TMP_SpriteCharacter" preserve="nothing" serialized="true" />
-    <type fullname="TMPro.TMP_SpriteGlyph" preserve="nothing" serialized="true" />
     <type fullname="TMPro.VertexGradient" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="Unity.Timeline, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
@@ -254,7 +253,6 @@
     <type fullname="UnityEngine.Object" preserve="all" />
     <type fullname="UnityEngine.RectTransform" preserve="all" />
     <type fullname="UnityEngine.RenderSettings" preserve="all" />
-    <type fullname="UnityEngine.RenderTexture" preserve="all" />
     <type fullname="UnityEngine.Shader" preserve="all" />
     <type fullname="UnityEngine.SkinnedMeshRenderer" preserve="all" />
     <type fullname="UnityEngine.Sprite" preserve="all" />

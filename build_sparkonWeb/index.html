@@ -112,6 +112,17 @@
         return Math.max(0.1, Math.min(dpr, cap));   // 네이티브 DPR 이상으로는 올리지 않음(업스케일만)
       })();
 
+      // ── 모바일·태블릿 렌더 해상도 상한. 모바일 GPU는 백버퍼 픽셀 수에 fps가 거의 비례한다.
+      //    태블릿(IM-H092W, DPR 1.5) livesketch_ar AR 화면 측정(2026-11-12): DPR 1.5 -> 1.0 에서 33 -> 49fps.
+      //    대가: 고해상도 화면에서 약간 흐려진다. 더 선명하게 하려면 값을 올린다(1.25 등, fps와 트레이드오프).
+      //    판정은 UA 만으로 하지 않는다. 안드로이드 태블릿 Chrome 은 기본이 데스크톱 모드라 UA 에 Android 가 없다(X11; Linux).
+      //    터치(coarse pointer)이면서 화면 짧은 변이 1024 CSS px 이하면 휴대 기기로 본다(대형 전자칠판은 제외돼 위 TARGET_W 규칙을 따른다).
+      var MOBILE_MAX_DPR = 1.0;
+      var isHandheld = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+        ((navigator.maxTouchPoints || 0) > 0 && !!window.matchMedia && window.matchMedia('(pointer: coarse)').matches &&
+         Math.min(screen.width, screen.height) <= 1024);
+      if (isHandheld) config.devicePixelRatio = Math.min(config.devicePixelRatio, MOBILE_MAX_DPR);
+
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
 
