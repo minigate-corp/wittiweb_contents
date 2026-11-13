@@ -15,8 +15,10 @@
     <type fullname="LiveSketchFullAnimalPopup" preserve="all" />
     <type fullname="LiveSketchInfoPopup" preserve="all" />
     <type fullname="LiveSketchLeavePopup" preserve="all" />
+    <type fullname="LiveSketchLeavePopupWeb" preserve="all" />
     <type fullname="LiveSketchManager" preserve="all" />
     <type fullname="LiveSketchPlayPopup" preserve="all" />
+    <type fullname="LiveSketchPlayPopupWeb" preserve="all" />
     <type fullname="LiveSketchReleaseAnimalPopup" preserve="all" />
     <type fullname="LiveSketchView" preserve="all" />
     <type fullname="LS_AnimalContol" preserve="all" />

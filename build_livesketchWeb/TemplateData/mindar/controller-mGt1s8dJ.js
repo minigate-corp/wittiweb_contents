@@ -52606,6 +52606,26 @@ class Q5 {
       trackedPoints: b
     }), i.dispose(), u.dispose(), d.dispose(), h.dispose(), { worldCoords: g, screenCoords: b, debugExtra: o };
   }
+  // [sparkon] track 의 비동기판(debugMode 미지원).
+  // arraySync 는 GPU 가 끝날 때까지 readPixels 로 메인 스레드를 세운다(모바일 프로파일에서 메인 스레드의 55~62%).
+  // array() 는 WebGL2 fence 를 폴링하며 기다리므로 그동안 Unity 가 프레임을 계속 그린다.
+  async trackAsync(t, e, s) {
+    const r = O5(this.projectionTransform, e), i = this._buildAdjustedModelViewTransform(r);
+    const a = this.featurePointsListT[s], l = this.imagePixelsListT[s], c = this.imagePropertiesListT[s], u = this._computeProjection(i, t, s), { matchingPointsT: d, simT: h } = this._computeMatching(a, l, c, u);
+    let p, f;
+    try {
+      [p, f] = await Promise.all([d.array(), h.array()]);
+    } finally {
+      i.dispose(), u.dispose(), d.dispose(), h.dispose();
+    }
+    const m = this.trackingKeyframeList[s], g = [], b = [];
+    for (let w = 0; w < p.length; w++)
+      if (f[w] > U5 && w < m.points.length) {
+        const y = K5(r, p[w][0], p[w][1]);
+        b.push(y), g.push({ x: m.points[w].x / m.scale, y: m.points[w].y / m.scale, z: 0 });
+      }
+    return { worldCoords: g, screenCoords: b, debugExtra: {} };
+  }
   _computeMatching(t, e, s, o) {
     const r = Z5, i = r * 2 + 1, l = H5 * B5, c = _5, u = l * 2 + 1, d = o.shape[0], h = o.shape[1], p = t.shape[0];
     if (!this.kernelCaches.computeMatching) {
@@ -53592,6 +53612,33 @@ class vC {
       prunedExtremas: i,
       localizedExtremas: a.arraySync()
     }), s.forEach((b) => b.forEach((x) => x.dispose())), o.forEach((b) => b && b.dispose()), r.forEach((b) => b.dispose()), a.dispose(), l.dispose(), c.dispose(), u.dispose(), d.dispose(), h.dispose();
+    return { featurePoints: this._toFeaturePoints(p, f, m), debugExtra: e };
+  }
+  // [sparkon] detect 의 비동기판(debugMode 미지원). trackAsync 와 같은 이유로 GPU 읽기를 모두 array() 로 기다린다.
+  async detectAsync(t) {
+    const s = [], o = [], r = [];
+    let i = null, a = null, l = null, c = null, u = null, d = null, h = null;
+    try {
+      for (let b = 0; b < this.numOctaves; b++) {
+        const x = b === 0 ? this._applyFilter(t) : this._downsampleBilinear(s[b - 1][s[b - 1].length - 1]);
+        s.push([x, this._applyFilter(x)]);
+      }
+      for (let b = 0; b < this.numOctaves; b++)
+        o.push(this._differenceImageBinomial(s[b][0], s[b][1]));
+      for (let b = 1; b < this.numOctaves - 1; b++)
+        r.push(this._buildExtremas(o[b - 1], o[b], o[b + 1]));
+      i = await this._applyPruneAsync(r);
+      a = await this._computeLocalizationAsync(i, o);
+      l = this._computeOrientationHistograms(a, s), c = this._smoothHistograms(l), u = this._computeExtremaAngles(c), d = this._computeExtremaFreak(s, a, u), h = this._computeFreakDescriptors(d);
+      const [p, f, m] = await Promise.all([a.array(), u.array(), h.array()]);
+      return { featurePoints: this._toFeaturePoints(p, f, m), debugExtra: null };
+    } finally {
+      s.forEach((b) => b.forEach((x) => x.dispose())), o.forEach((b) => b.dispose()), r.forEach((b) => b.dispose());
+      [a, l, c, u, d, h].forEach((b) => b && b.dispose());
+    }
+  }
+  // [sparkon] detect 의 마지막 단계(읽어 온 배열 -> 특징점)를 동기/비동기판이 같이 쓰도록 분리
+  _toFeaturePoints(p, f, m) {
     const g = [];
     for (let b = 0; b < p.length; b++) {
       if (p[b][0] == 0)
@@ -53612,7 +53659,7 @@ class vC {
         descriptors: x
       });
     }
-    return { featurePoints: g, debugExtra: e };
+    return g;
   }
   _computeFreakDescriptors(t) {
     if (!this.tensorCaches.computeFreakDescriptors) {
@@ -53688,29 +53735,36 @@ class vC {
    * @returns 
    */
   _computeLocalization(t, e) {
-    return D(() => {
-      const o = Ot().runKernel("ComputeLocalization", { prunedExtremasList: t, dogPyramidImagesT: e }).arraySync(), r = [];
-      for (let a = 0; a < o.length; a++) {
-        r.push([]);
-        for (let l = 0; l < o[a].length; l++)
-          r[a].push([]);
-      }
-      const i = [];
-      for (let a = 0; a < t.length; a++)
-        i[a] = [
-          t[a][0],
-          t[a][1],
-          t[a][2],
-          t[a][3]
-        ];
-      for (let a = 0; a < i.length; a++) {
-        if (i[a][0] === 0)
-          continue;
-        const l = o[a], c = 0.5 * (l[1][2] - l[1][0]), u = 0.5 * (l[2][1] - l[0][1]), d = l[1][2] + l[1][0] - 2 * l[1][1], h = l[2][1] + l[0][1] - 2 * l[1][1], p = 0.25 * (l[0][0] + l[2][2] - l[0][2] - l[2][0]), f = d * h - p * p, m = (h * -c + -p * -u) / f, g = (-p * -c + d * -u) / f, b = i[a][2] + g, x = i[a][3] + m;
-        Math.abs(f) < 1e-4 || (i[a][2] = b, i[a][3] = x);
-      }
-      return $e(i, [i.length, i[0].length], "float32");
-    });
+    return D(() => this._localize(t, Ot().runKernel("ComputeLocalization", { prunedExtremasList: t, dogPyramidImagesT: e }).arraySync()));
+  }
+  // [sparkon] _computeLocalization 의 비동기판
+  async _computeLocalizationAsync(t, e) {
+    const k = D(() => Ot().runKernel("ComputeLocalization", { prunedExtremasList: t, dogPyramidImagesT: e }));
+    let o;
+    try {
+      o = await k.array();
+    } finally {
+      k.dispose();
+    }
+    return D(() => this._localize(t, o));
+  }
+  // [sparkon] 읽어 온 국소화 결과로 극값 위치를 보정한다(동기/비동기판 공용)
+  _localize(t, o) {
+    const i = [];
+    for (let a = 0; a < t.length; a++)
+      i[a] = [
+        t[a][0],
+        t[a][1],
+        t[a][2],
+        t[a][3]
+      ];
+    for (let a = 0; a < i.length; a++) {
+      if (i[a][0] === 0)
+        continue;
+      const l = o[a], c = 0.5 * (l[1][2] - l[1][0]), u = 0.5 * (l[2][1] - l[0][1]), d = l[1][2] + l[1][0] - 2 * l[1][1], h = l[2][1] + l[0][1] - 2 * l[1][1], p = 0.25 * (l[0][0] + l[2][2] - l[0][2] - l[2][0]), f = d * h - p * p, m = (h * -c + -p * -u) / f, g = (-p * -c + d * -u) / f, b = i[a][2] + g, x = i[a][3] + m;
+      Math.abs(f) < 1e-4 || (i[a][2] = b, i[a][3] = x);
+    }
+    return $e(i, [i.length, i[0].length], "float32");
   }
   // faster to do it in CPU
   // if we do in gpu, we probably need to use tf.topk(), which seems to be run in CPU anyway (no gpu operation for that)
@@ -53729,22 +53783,8 @@ class vC {
     }
     D(() => {
       for (let a = 0; a < t.length; a++) {
-        const l = Ot().runKernel("ExtremaReduction", { extremasResultT: t[a] }), c = a + 1, u = l.arraySync(), d = l.shape[0], h = l.shape[1], p = h * 2 / Br, f = d * 2 / Br;
-        for (let m = 0; m < d; m++)
-          for (let g = 0; g < h; g++) {
-            const b = u[m][g];
-            if (b == 0)
-              continue;
-            const x = b % 1e3, w = Math.floor(Math.abs(b) / 1e3), y = g * 2 + (w === 2 || w === 3 ? 1 : 0), I = m * 2 + (w === 1 || w === 3 ? 1 : 0), v = Math.floor(y / p), S = Math.floor(I / f) * Br + v, N = Math.abs(x);
-            let R = s;
-            for (; R >= 1 && N > o[S][R - 1]; )
-              R -= 1;
-            if (R < s) {
-              for (let M = s - 1; M >= R + 1; M--)
-                o[S][M] = o[S][M - 1], r[S][M][0] = r[S][M - 1][0], r[S][M][1] = r[S][M - 1][1], r[S][M][2] = r[S][M - 1][2], r[S][M][3] = r[S][M - 1][3];
-              o[S][R] = N, r[S][R][0] = x, r[S][R][1] = c, r[S][R][2] = I, r[S][R][3] = y;
-            }
-          }
+        const l = Ot().runKernel("ExtremaReduction", { extremasResultT: t[a] });
+        this._pruneInto(o, r, a + 1, l.arraySync(), l.shape[0], l.shape[1]);
       }
     });
     const i = [];
@@ -53752,6 +53792,48 @@ class vC {
       for (let l = 0; l < s; l++)
         i.push(r[a][l]);
     return i;
+  }
+  // [sparkon] _applyPrune 의 비동기판. 옥타브별 축소 결과를 한꺼번에 비동기로 읽는다.
+  async _applyPruneAsync(t) {
+    const e = Br * Br, s = D4, o = [], r = [];
+    for (let a = 0; a < e; a++) {
+      r.push([]), o.push([]);
+      for (let l = 0; l < s; l++)
+        r[a].push([0, 0, 0, 0]), o[a].push(0);
+    }
+    const ls = D(() => t.map((x) => Ot().runKernel("ExtremaReduction", { extremasResultT: x })));
+    let us;
+    try {
+      us = await Promise.all(ls.map((l) => l.array()));
+    } finally {
+      ls.forEach((l) => l.dispose());
+    }
+    for (let a = 0; a < ls.length; a++)
+      this._pruneInto(o, r, a + 1, us[a], ls[a].shape[0], ls[a].shape[1]);
+    const i = [];
+    for (let a = 0; a < e; a++)
+      for (let l = 0; l < s; l++)
+        i.push(r[a][l]);
+    return i;
+  }
+  // [sparkon] 한 옥타브의 축소 결과(u: d x h)를 칸별 상위 극값 목록(o: 점수, r: 극값)에 넣는다(동기/비동기판 공용)
+  _pruneInto(o, r, c, u, d, h) {
+    const s = D4, p = h * 2 / Br, f = d * 2 / Br;
+    for (let m = 0; m < d; m++)
+      for (let g = 0; g < h; g++) {
+        const b = u[m][g];
+        if (b == 0)
+          continue;
+        const x = b % 1e3, w = Math.floor(Math.abs(b) / 1e3), y = g * 2 + (w === 2 || w === 3 ? 1 : 0), I = m * 2 + (w === 1 || w === 3 ? 1 : 0), v = Math.floor(y / p), S = Math.floor(I / f) * Br + v, N = Math.abs(x);
+        let R = s;
+        for (; R >= 1 && N > o[S][R - 1]; )
+          R -= 1;
+        if (R < s) {
+          for (let M = s - 1; M >= R + 1; M--)
+            o[S][M] = o[S][M - 1], r[S][M][0] = r[S][M - 1][0], r[S][M][1] = r[S][M - 1][1], r[S][M][2] = r[S][M - 1][2], r[S][M][3] = r[S][M - 1][3];
+          o[S][R] = N, r[S][R][0] = x, r[S][R][1] = c, r[S][R][2] = I, r[S][R][3] = y;
+        }
+      }
   }
   _buildExtremas(t, e, s) {
     return D(() => Ot().runKernel("BuildExtremas", { image0: t, image1: e, image2: s }));
@@ -53856,6 +53938,23 @@ class V4 {
     return r.forEach((a) => {
       a.x += e, a.y += s;
     }), this.debugMode && (i.projectedImage = o.arraySync()), o.dispose(), { featurePoints: r, debugExtra: i };
+  }
+  // [sparkon] detectMoving 의 비동기판(조각 위치 순환은 동일)
+  detectMovingAsync(t) {
+    const e = this.lastRandomIndex % 3, s = Math.floor(this.lastRandomIndex / 3);
+    let o = Math.floor(this.height / 2 - this.cropSize + s * this.cropSize / 2), r = Math.floor(this.width / 2 - this.cropSize + e * this.cropSize / 2);
+    return r < 0 && (r = 0), o < 0 && (o = 0), r >= this.width - this.cropSize && (r = this.width - this.cropSize - 1), o >= this.height - this.cropSize && (o = this.height - this.cropSize - 1), this.lastRandomIndex = (this.lastRandomIndex + 1) % 9, this._detectAsync(t, r, o);
+  }
+  async _detectAsync(t, e, s) {
+    const o = t.slice([s, e], [this.cropSize, this.cropSize]);
+    try {
+      const { featurePoints: r } = await this.detector.detectAsync(o);
+      return r.forEach((a) => {
+        a.x += e, a.y += s;
+      }), { featurePoints: r, debugExtra: null };
+    } finally {
+      o.dispose();
+    }
   }
 }
 const SC = ({ image: n, ratio: t }) => {
@@ -55264,6 +55363,8 @@ class QQ {
     return this._glModelViewMatrix(t, e);
   }
   async _detectAndMatch(t, e) {
+    // [livesketch] 인식·추적은 동기판(detectMoving, track)을 쓴다. 비동기판은 GPU 결과를 기다릴 때마다 Unity 프레임 하나씩 밀려
+    //  태블릿에서 인식 1회 200ms -> 470ms, 추적 유지 16s -> 2s 로 나빠졌다(2026-11-12 측정). 비동기판은 캡처(MindAR_CaptureBegin)에서만 쓴다.
     const { featurePoints: s } = this.cropDetector.detectMoving(t), { targetIndex: o, modelViewTransform: r } = await this._workerMatch(s, e);
     return { targetIndex: o, modelViewTransform: r };
   }
