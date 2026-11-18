@@ -11,6 +11,7 @@
     <type fullname="JumpReceiver" preserve="all" />
     <type fullname="LS_OctopusControl" preserve="all" />
     <type fullname="ObjectBillboard" preserve="all" />
+    <type fullname="ProjectedMeshShadow" preserve="all" />
     <type fullname="SFXUIButtonEvent" preserve="all" />
     <type fullname="SoundSignalEmitter" preserve="all" />
     <type fullname="SoundSignalReceiver" preserve="all" />
@@ -26,6 +27,13 @@
     <type fullname="Workbook1_Level1_View" preserve="all" />
     <type fullname="Workbook1_Level3_Manager" preserve="all" />
     <type fullname="Workbook1_Level3_View" preserve="all" />
+    <type fullname="Workbook10_Level1_Manager" preserve="all" />
+    <type fullname="Workbook10_Level1_View" preserve="all" />
+    <type fullname="Workbook10_Level2_Manager" preserve="all" />
+    <type fullname="Workbook10_Level2_View" preserve="all" />
+    <type fullname="Workbook10_Level3_Manager" preserve="all" />
+    <type fullname="Workbook10_Level3_View" preserve="all" />
+    <type fullname="Workbook10_SpaceFriend" preserve="all" />
     <type fullname="Workbook2_Level2_Manager" preserve="all" />
     <type fullname="Workbook2_Level2_View" preserve="all" />
     <type fullname="Workbook2_Level3_Manager" preserve="all" />
@@ -85,6 +93,10 @@
     <type fullname="WorldDragDropController" preserve="all" />
     <type fullname="WV_UIMamager" preserve="all" />
     <type fullname="SuperScrollView.ItemPrefabConfData" preserve="nothing" serialized="true" />
+    <type fullname="Workbook10_Level1_Manager/DropRound" preserve="nothing" serialized="true" />
+    <type fullname="Workbook10_Level1_Manager/FruitPrefab" preserve="nothing" serialized="true" />
+    <type fullname="Workbook10_Level1_Manager/WordRound" preserve="nothing" serialized="true" />
+    <type fullname="Workbook10_Level3_Manager/SentenceQuestion" preserve="nothing" serialized="true" />
     <type fullname="Workbook9_Level2_Manager/NameRound" preserve="nothing" serialized="true" />
     <type fullname="Workbook_3_1_KeywordData" preserve="nothing" serialized="true" />
     <type fullname="Workbook_3_1_SettingData" preserve="nothing" serialized="true" />
@@ -141,12 +153,19 @@
   <assembly fullname="Unity.Cinemachine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="Unity.Cinemachine.CinemachineBrain" preserve="all" />
     <type fullname="Unity.Cinemachine.CinemachineCamera" preserve="all" />
+    <type fullname="Unity.Cinemachine.CinemachineFollow" preserve="all" />
+    <type fullname="Unity.Cinemachine.CinemachineRotationComposer" preserve="all" />
     <type fullname="Unity.Cinemachine.CameraTarget" preserve="nothing" serialized="true" />
     <type fullname="Unity.Cinemachine.LensSettings" preserve="nothing" serialized="true" />
     <type fullname="Unity.Cinemachine.LensSettings/PhysicalSettings" preserve="nothing" serialized="true" />
     <type fullname="Unity.Cinemachine.PrioritySettings" preserve="nothing" serialized="true" />
     <type fullname="Unity.Cinemachine.CinemachineBlendDefinition" preserve="nothing" serialized="true" />
     <type fullname="Unity.Cinemachine.CinemachineBrain/LensModeOverrideSettings" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Cinemachine.LookaheadSettings" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Cinemachine.ScreenComposerSettings" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Cinemachine.ScreenComposerSettings/DeadZoneSettings" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Cinemachine.ScreenComposerSettings/HardLimitSettings" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Cinemachine.TargetTracking.TrackerSettings" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="Unity.InputSystem, Version=1.20.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.InputSystem.InputActionAsset" preserve="all" />
@@ -232,6 +251,7 @@
   <assembly fullname="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.AnimationClip" preserve="all" />
     <type fullname="UnityEngine.Animator" preserve="all" />
+    <type fullname="UnityEngine.Avatar" preserve="all" />
     <type fullname="UnityEngine.RuntimeAnimatorController" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
@@ -281,6 +301,7 @@
     <type fullname="UnityEngine.BoxCollider" preserve="all" />
     <type fullname="UnityEngine.MeshCollider" preserve="all" />
     <type fullname="UnityEngine.PhysicsMaterial" preserve="all" />
+    <type fullname="UnityEngine.Rigidbody" preserve="all" />
     <type fullname="UnityEngine.SphereCollider" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
