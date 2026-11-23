@@ -33,4 +33,6 @@ body { padding: 0; margin: 0; background: #ffffff }
 #arrive.hide { opacity: 0; pointer-events: none }
 #arrive .art { display: grid; place-items: center; width: 150px; height: 150px; border-radius: 50%; background: rgba(255,255,255,.22) }
 #arrive .from { margin: 0; font-weight: 800; font-size: 18px; color: rgba(255,255,255,.9) }
+/* 지구본 도착 화면과 아이콘·이름 위치를 같게 두고 "○○에서 들어왔어요" 글자만 감춘다(자리는 남김). */
+#arrive .from { visibility: hidden }
 #arrive h1 { margin: 0; font-weight: 900; font-size: 56px; letter-spacing: -.04em; color: #fff; text-shadow: 0 3px 0 rgba(0,0,0,.15) }
