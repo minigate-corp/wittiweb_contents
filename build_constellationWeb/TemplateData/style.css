@@ -26,16 +26,14 @@ body { padding: 0; margin: 0; background: #ffffff }
 #unity-fullscreen-button { cursor:pointer; float: right; width: 38px; height: 38px; background: url('fullscreen-button.png') no-repeat center }
 #unity-warning { position: absolute; left: 50%; top: 5%; transform: translate(-50%); background: white; padding: 10px; display: none }
 
-/* ★ 도착 화면: Android BI 화면과 같은 값. _BI 씬 Logo(bi_constellation.png, 284×238)를 Canvas Scaler 기준
-     1920×1080·가로 맞춤(Match 0)으로 그린 크기(캔버스 단위)를 쓴다. 단위 --u 는 8개 컨텐츠 공통 식
-     max(min(100vw/1920, 100vh/1200), 0.5px)를 쓴다(공통 규칙, 별자리 _BI 기준과는 조금 다름).
-     원 지름 150, 원 투명도 0.22, 별 너비 약 65, 이름 글자 폭 약 275·높이 50, 그림자 아래 3(검정 0.15).
-     원과 이름 사이는 BI 이미지(27)보다 원 지름의 25%(37.5)를 더 띄운다(8개 컨텐츠 공통 규칙).
-     0.5px 하한은 세로 화면·휴대폰에서 너무 작아지지 않게 하려는 것이다.
-     글꼴은 Pretendard Variable 조각(SIL OFL 1.1). 문구를 바꾸면 이 조각에 그 글자가 있는지 확인할 것 */
+/* ★ 도착 화면: 위티랜드 지구본(world.html) 별자리관측소 도착 화면(#dest)과 같은 값이다.
+     지구본: 원 150px(흰색 22%), 별 아이콘 84px, 사이 간격 18px, 이름 56px·굵기 900. 화면 크기와 상관없이 고정 px.
+     "○○에서 들어왔어요" 줄(.from)은 visibility: hidden 으로 보이지 않게만 하고 자리는 남긴다.
+     그래야 지구본에서 넘어올 때 아이콘과 이름 위치가 그대로이고 가운데 글자만 사라진 것처럼 보인다.
+     글꼴은 Pretendard Variable 조각(SIL OFL 1.1). 문구를 바꾸면 이 조각에 그 글자가 있는지 확인할 것(없으면 world.html 원본 글꼴에서 다시 뽑기) */
 @font-face { font-family: 'Pretendard Arrive'; font-style: normal; font-display: block; font-weight: 45 920; src: url('fonts/Pretendard-arrive.woff2') format('woff2') }
-#arrive { --u: max(min(calc(100vw / 1920), calc(100vh / 1200)), 0.5px); position: fixed; inset: 0; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * 63); background: #4E5BD6; font-family: 'Pretendard Arrive', system-ui, sans-serif; transition: opacity .3s ease; -webkit-user-select: none; user-select: none }
+#arrive { position: fixed; inset: 0; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: #4E5BD6; font-family: 'Pretendard Arrive', system-ui, sans-serif; transition: opacity .3s ease; -webkit-user-select: none; user-select: none }
 #arrive.hide { opacity: 0; pointer-events: none }
-#arrive .art { display: grid; place-items: center; width: calc(var(--u) * 150); height: calc(var(--u) * 150); border-radius: 50%; background: rgba(255,255,255,.22) }
-#arrive .art svg { width: calc(var(--u) * 91); height: calc(var(--u) * 91) }
-#arrive h1 { margin: 0; font-weight: 900; font-size: calc(var(--u) * 55); line-height: 1; letter-spacing: -.04em; color: #fff; text-shadow: 0 calc(var(--u) * 3) 0 rgba(0,0,0,.15) }
+#arrive .art { display: grid; place-items: center; width: 150px; height: 150px; border-radius: 50%; background: rgba(255,255,255,.22) }
+#arrive .from { margin: 0; font-weight: 800; font-size: 18px; color: rgba(255,255,255,.9); visibility: hidden }
+#arrive h1 { margin: 0; font-weight: 900; font-size: 56px; letter-spacing: -.04em; color: #fff; text-shadow: 0 3px 0 rgba(0,0,0,.15) }

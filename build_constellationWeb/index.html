@@ -13,11 +13,13 @@
     <script type="module" src="TemplateData/mindar/mindar-image.prod.js"></script>
   </head>
   <body>
-    <!-- 도착 화면: Android BI 화면(_BI 씬의 BI 이미지)과 같은 배경·아이콘 원·이름으로 그린다(진행 바 없음).
+    <!-- 도착 화면: 위티랜드 지구본(world.html)의 별자리관측소 도착 화면과 같은 크기·위치로 그린다(진행 바 없음).
+         "○○에서 들어왔어요" 줄은 보이지 않게만 하고 자리는 남겨, 아이콘과 이름이 지구본 화면과 같은 자리에 그대로 있게 한다.
          엔진 로딩부터 BI 씬이 로비를 띄울 때까지 캔버스 위를 덮는다.
          로비가 뜨면 WebLoadingOverlay.jslib 의 WebLoading_Hide → window.__webLoadingHide 로 서서히 내린다. -->
     <section id="arrive">
-      <div class="art"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg></div>
+      <div class="art"><svg width="84" height="84" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg></div>
+      <p class="from" aria-hidden="true">별자리관측소에서 들어왔어요</p>
       <h1>별자리관측소</h1>
     </section>
     <div id="unity-container" class="unity-desktop">
