@@ -17,7 +17,8 @@
          지구본에서 넘어올 때 이질감이 없도록, 엔진 로딩부터 BI 씬이 로비를 띄울 때까지 캔버스 위를 덮는다.
          로비가 뜨면 WebLoadingOverlay.jslib 의 WebLoading_Hide → window.__webLoadingHide 로 서서히 내린다. -->
     <section id="arrive">
-      <div class="art"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v13.5"/></svg></div>
+      <div class="art"><svg width="84" height="84" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v13.5"/></svg></div>
+      <p class="from" aria-hidden="true">워크북에서 들어왔어요</p>
       <h1>워크북</h1>
     </section>
     <div id="unity-container" class="unity-desktop">
@@ -88,7 +89,7 @@
         streamingAssetsUrl: "StreamingAssets",
         companyName: "minigate",
         productName: "SparkOn_AR",
-        productVersion: "0.1.4",
+        productVersion: "0.1.5",
         showBanner: unityShowBanner,
         // Application.persistentDataPath(/idbfs/<hash>) 로의 쓰기를 IndexedDB 에
         // 자동으로 동기화한다. 이 값이 없으면 Unity 가 deprecated 된 수동 동기화
