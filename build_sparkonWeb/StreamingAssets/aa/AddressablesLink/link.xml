@@ -130,22 +130,6 @@
     <type fullname="Luck9kr.Uisystem.FullScreenWidget" preserve="all" />
     <type fullname="Luck9kr.Uisystem.ChildTextMeshProColorState" preserve="nothing" serialized="true" />
   </assembly>
-  <assembly fullname="MeshBakerCore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-    <type fullname="MB2_TextureBakeResults" preserve="all" />
-    <type fullname="MB3_MeshBaker" preserve="all" />
-    <type fullname="MB3_MeshBakerGrouper" preserve="all" />
-    <type fullname="MB3_TextureBaker" preserve="all" />
-    <type fullname="DigitalOpus.MB.Core.GrouperData" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_AgglomerativeClustering" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_MeshCombinerSettingsData" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_MeshCombinerSingle" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_MeshCombinerSingle/BufferDataFromPreviousBake" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_MeshCombinerSingle/MB_DynamicGameObject" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_MeshCombinerSingle/SerializableIntArray" preserve="nothing" serialized="true" />
-    <type fullname="MB_AtlasesAndRects" preserve="nothing" serialized="true" />
-    <type fullname="MB_MaterialAndUVRect" preserve="nothing" serialized="true" />
-    <type fullname="MB_MultiMaterial" preserve="nothing" serialized="true" />
-  </assembly>
   <assembly fullname="Nobi.UiRoundedCorners, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="Nobi.UiRoundedCorners.ImageWithIndependentRoundedCorners" preserve="all" />
     <type fullname="Nobi.UiRoundedCorners.ImageWithRoundedCorners" preserve="all" />
