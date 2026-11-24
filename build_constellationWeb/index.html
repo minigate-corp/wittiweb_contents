@@ -8,9 +8,8 @@
     <!-- 도착 화면 글꼴은 첫 그림에 바로 쓰이도록 미리 받는다 -->
     <link rel="preload" href="TemplateData/fonts/Pretendard-arrive.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="TemplateData/style.css">
-    <!-- MindAR 1.2.5 (이미지 트래킹). ES module 이며 로드되면 window.MINDAR.IMAGE.Controller 를 노출한다.
-         MindARBridge.jslib 가 이 전역을 사용한다. 워커 코드는 controller-*.js 에 내장되어 있어 파일 3개면 된다. -->
-    <script type="module" src="TemplateData/mindar/mindar-image.prod.js"></script>
+    <!-- MindAR 1.2.5 (TemplateData/mindar, 이미지 트래킹)는 여기서 불러오지 않는다.
+         첫 로딩을 줄이려고 MindARBridge.jslib 가 AR 을 처음 시작할 때 import 한다(카메라 열기와 동시). -->
   </head>
   <body>
     <!-- 도착 화면: 위티랜드 지구본(world.html)의 별자리관측소 도착 화면과 같은 크기·위치로 그린다(진행 바 없음).
@@ -90,7 +89,7 @@
         streamingAssetsUrl: "StreamingAssets",
         companyName: "minigate",
         productName: "Constellation_AR",
-        productVersion: "0.1.4",
+        productVersion: "0.1.5",
         showBanner: unityShowBanner,
         // Application.persistentDataPath(/idbfs/<hash>) 로의 쓰기를 IndexedDB 에
         // 자동으로 동기화한다. 이 값이 없으면 Unity 가 deprecated 된 수동 동기화

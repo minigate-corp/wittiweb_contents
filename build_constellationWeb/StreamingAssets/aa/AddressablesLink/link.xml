@@ -24,26 +24,11 @@
     <type fullname="ExceptionPopup" preserve="all" />
     <type fullname="GyroRotationRateController" preserve="all" />
     <type fullname="Height" preserve="all" />
-    <type fullname="MB2_TextureBakeResults" preserve="all" />
-    <type fullname="MB3_MeshBaker" preserve="all" />
-    <type fullname="MB3_MeshBakerGrouper" preserve="all" />
-    <type fullname="MB3_TextureBaker" preserve="all" />
     <type fullname="ObjectBillboard" preserve="all" />
     <type fullname="SFXUIButtonEvent" preserve="all" />
     <type fullname="TouchEffectControl" preserve="all" />
     <type fullname="WV_UIMamager" preserve="all" />
     <type fullname="ARCamGestureData" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.GrouperData" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_AgglomerativeClustering" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_MeshCombinerSettingsData" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_MeshCombinerSingle" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_MeshCombinerSingle/BufferDataFromPreviousBake" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_MeshCombinerSingle/MB_DynamicGameObject" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.MB3_MeshCombinerSingle/SerializableIntArray" preserve="nothing" serialized="true" />
-    <type fullname="DigitalOpus.MB.Core.ShaderTextureProperty" preserve="nothing" serialized="true" />
-    <type fullname="MB_AtlasesAndRects" preserve="nothing" serialized="true" />
-    <type fullname="MB_MaterialAndUVRect" preserve="nothing" serialized="true" />
-    <type fullname="MB_MultiMaterial" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="DG.Tweening.DOTweenAnimation" preserve="all" />
