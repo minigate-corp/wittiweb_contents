@@ -3,7 +3,6 @@
     <type fullname="AirarManager" preserve="all" />
     <type fullname="AniamtionEvent" preserve="all" />
     <type fullname="ARLiveSketchColorMapping" preserve="all" />
-    <type fullname="ARPopupBookContent" preserve="all" />
     <type fullname="CFX_AutoDestructShuriken" preserve="all" />
     <type fullname="CommonCaptureResultPopup" preserve="all" />
     <type fullname="CommonMessagePopup" preserve="all" />
@@ -16,7 +15,6 @@
     <type fullname="ObjectBillboard" preserve="all" />
     <type fullname="ProjectedMeshShadow" preserve="all" />
     <type fullname="SFXUIButtonEvent" preserve="all" />
-    <type fullname="SoundSignalEmitter" preserve="all" />
     <type fullname="SoundSignalReceiver" preserve="all" />
     <type fullname="StringSignalEmitter" preserve="all" />
     <type fullname="StringSignalReceiver" preserve="all" />
@@ -28,6 +26,8 @@
     <type fullname="Workbook_ShapesControl" preserve="all" />
     <type fullname="Workbook1_Level1_Manager" preserve="all" />
     <type fullname="Workbook1_Level1_View" preserve="all" />
+    <type fullname="Workbook1_Level2_Manager" preserve="all" />
+    <type fullname="Workbook1_Level2_View" preserve="all" />
     <type fullname="Workbook1_Level3_Manager" preserve="all" />
     <type fullname="Workbook1_Level3_View" preserve="all" />
     <type fullname="Workbook10_Level1_Manager" preserve="all" />
@@ -37,6 +37,8 @@
     <type fullname="Workbook10_Level3_Manager" preserve="all" />
     <type fullname="Workbook10_Level3_View" preserve="all" />
     <type fullname="Workbook10_SpaceFriend" preserve="all" />
+    <type fullname="Workbook2_Level1_Manager" preserve="all" />
+    <type fullname="Workbook2_Level1_View" preserve="all" />
     <type fullname="Workbook2_Level2_Manager" preserve="all" />
     <type fullname="Workbook2_Level2_View" preserve="all" />
     <type fullname="Workbook2_Level3_Manager" preserve="all" />
@@ -49,6 +51,8 @@
     <type fullname="Workbook3_Level3_View" preserve="all" />
     <type fullname="Workbook4_Level1_Manager" preserve="all" />
     <type fullname="Workbook4_Level1_View" preserve="all" />
+    <type fullname="Workbook4_Level2_Manager" preserve="all" />
+    <type fullname="Workbook4_Level2_View" preserve="all" />
     <type fullname="Workbook4_Level3_Manager" preserve="all" />
     <type fullname="Workbook4_Level3_View" preserve="all" />
     <type fullname="WorkBook5_3_KeywordData" preserve="all" />
@@ -63,6 +67,8 @@
     <type fullname="Workbook7_Level1_View" preserve="all" />
     <type fullname="Workbook7_Level2_Manager" preserve="all" />
     <type fullname="Workbook7_Level2_View" preserve="all" />
+    <type fullname="Workbook7_Level3_Manager" preserve="all" />
+    <type fullname="Workbook7_Level3_View" preserve="all" />
     <type fullname="Workbook8_FoodItem" preserve="all" />
     <type fullname="Workbook8_HangeulFoodItem" preserve="all" />
     <type fullname="Workbook8_Level1_Manager" preserve="all" />
@@ -269,14 +275,14 @@
     <type fullname="UnityEngine.Texture2D" preserve="all" />
     <type fullname="UnityEngine.Texture2DArray" preserve="all" />
     <type fullname="UnityEngine.Transform" preserve="all" />
-    <type fullname="UnityEngine.ExposedReference`1" preserve="nothing" serialized="true" />
-    <type fullname="UnityEngine.RenderingLayerMask" preserve="nothing" serialized="true" />
     <type fullname="UnityEngine.Events.ArgumentCache" preserve="nothing" serialized="true" />
     <type fullname="UnityEngine.Events.PersistentCallGroup" preserve="nothing" serialized="true" />
     <type fullname="UnityEngine.Events.PersistentListenerMode" preserve="nothing" serialized="true" />
     <type fullname="UnityEngine.Events.UnityEvent" preserve="nothing" serialized="true" />
     <type fullname="UnityEngine.RectOffset" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.RenderingLayerMask" preserve="nothing" serialized="true" />
     <type fullname="UnityEngine.Events.UnityEvent`2" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.ExposedReference`1" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="UnityEngine.DirectorModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.Playables.PlayableDirector" preserve="all" />
